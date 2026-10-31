@@ -1,10 +1,15 @@
 let shots = [];
 let overheated = false;
+let resetTimer;
 
 document.getElementById("shootButton").addEventListener("click", shoot);
 
 function shoot() {
-    if (overheated) return;
+    if (overheated) {
+        return;
+    }
+
+    clearTimeout(resetTimer);
 
     let now = Date.now();
 
@@ -17,16 +22,24 @@ function shoot() {
 
     if (shots.length >= 10) {
         overheat();
+        return;
     }
+
+    resetTimer = setTimeout(function() {
+        shots = [];
+        document.getElementById("shots").innerText = "Shots: 0 / 10";
+    }, 3000);
 }
 
 function overheat() {
     overheated = true;
 
+    clearTimeout(resetTimer);
+
     document.getElementById("shootButton").disabled = true;
     document.getElementById("status").innerText = "OVERHEATED!";
 
-    setTimeout(() => {
+    setTimeout(function() {
         overheated = false;
         shots = [];
 
